@@ -62,9 +62,7 @@ Memory Usage: 38.5 MB, less than 31.18% of Java online submissions for Ugly Numb
         }
         cache.forEach((k, v) -> result.addAll(v));
         int count = 0;
-        Iterator<Integer> itr = result.iterator();
-        while (itr.hasNext()) {
-            int value = itr.next();
+        for (final int value : result) {
             if (count == n - 2) return value;
             ++count;
         }

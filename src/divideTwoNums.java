@@ -3,7 +3,7 @@ public class divideTwoNums {
         if (divisor == 1) return dividend;
         if (dividend == 0) return 0;
 
-        if (divisor == 0 || dividend < Integer.MIN_VALUE || dividend > Integer.MAX_VALUE ||
+        if (divisor == 0 || 
                 (Integer.MIN_VALUE == dividend && divisor == -1)) {
             return Integer.MAX_VALUE;
         }

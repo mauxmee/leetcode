@@ -37,6 +37,7 @@ class RemoveNthFromEnd {
     }
 
     public static ListNode solution(ListNode head, int n) {
+        if (head == null) return null;
         ListNode cur = head;
         int count = 0;
         while (cur != null) {
@@ -64,6 +65,7 @@ class RemoveNthFromEnd {
     }
 
     public static ListNode solution2(ListNode head, int n) {
+        if (head == null) return null;
         ListNode p1 = head, p2 = head;
         int count = 0;
         // skip the first n element.
@@ -72,8 +74,8 @@ class RemoveNthFromEnd {
             ++count;
         }
         // reach end before N elements
-        if (count < n ) return null;
-        else if(p1 == null) return head.next;
+        if (count < n) return null;
+        else if (p1 == null) return head.next;
         p1 = p1.next;
         while (p1 != null) {
             p1 = p1.next;
@@ -107,8 +109,8 @@ class RemoveNthFromEnd {
 
     public static ListNode makeList(int[] v) {
         ListNode head = new ListNode(), cur = head;
-        for (int i = 0; i < v.length; ++i) {
-            cur.next = new ListNode(v[i]);
+        for (final int j : v) {
+            cur.next = new ListNode(j);
             cur = cur.next;
         }
         return head.next;
@@ -120,6 +122,6 @@ class RemoveNthFromEnd {
             sb.append(l.val).append(",");
             l = l.next;
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 }

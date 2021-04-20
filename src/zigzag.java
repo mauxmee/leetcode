@@ -51,14 +51,14 @@ s consists of English letters (lower-case and upper-case), ',' and '.'.
 public class zigzag {
     public static String convert(String s, int numRows) {
         if(numRows <= 1) return s;
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         int len = s.length();
         for (int i = 0; i < numRows; ++i) {
             int j = i;
             boolean odd = true;
             while (j < len) {
                 sb.append(s.charAt(j));
-                int step = 0, count = 0;
+                int step, count = 0;
                 do {
                     step = odd ? 2 * (numRows - 1 - i) : 2 * i;
                     odd = !odd;

@@ -63,9 +63,7 @@ public class addTwoNumbers {
                 }
                 if (current == null) {
                     current = new ListNode(n);
-                    if (prev != null) {
-                        prev.next = current;
-                    }
+                    prev.next = current;
                 } else {
                     current.val = n;
                 }
@@ -91,7 +89,7 @@ public class addTwoNumbers {
             sb.append(current.val).append(",");
             current = current.next;
         }
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
     private static ListNode addOne(ListNode currentNode, ListNode prevNode, int sum) {

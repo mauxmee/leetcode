@@ -1,10 +1,6 @@
 import java.util.BitSet;
 
-/**
- * User: kaixue
- * Date: 19/04/2021
- * Time: 5:58 pm
- */
+
 public class TableRowCache {
 
     public static class CheckResult {

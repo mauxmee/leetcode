@@ -60,7 +60,7 @@ public class threesum {
             for (int j = i + 1; j < N; ++j) {
                 if (secondVal == nums[j]) continue;
                 secondVal = nums[j];
-                int index = Arrays.binarySearch(nums, j + 1, N, 0 - firstVal - secondVal);
+                int index = Arrays.binarySearch(nums, j + 1, N, -firstVal - secondVal);
                 if (index > 0) {
                     result.add(Arrays.asList(firstVal, secondVal, nums[index]));
                 }
@@ -80,7 +80,7 @@ public class threesum {
             // skip the same number
             if (firstVal == nums[i]) continue;
             firstVal = nums[i];
-            int j = i + 1, k = N - 1, target = 0 - firstVal;
+            int j = i + 1, k = N - 1, target = -firstVal;
             while (j < k) {
                 int twosum = nums[j] + nums[k];
                 if (twosum > target) --k;
