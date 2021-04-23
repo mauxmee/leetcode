@@ -1,9 +1,6 @@
 package amazon;
 
-import java.util.ArrayDeque;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 200. Number of Islands
@@ -85,38 +82,47 @@ public class NumIslands {
     /*
     * Runtime: 5 ms, faster than 10.39% of Java online submissions for Number of Islands.
 Memory Usage: 41.5 MB, less than 52.80% of Java online submissions for Number of Islands.*/
+
+    /* second try: remove flags and change mark to 'V' , result:
+    * Runtime: 4 ms, faster than 18.69% of Java online submissions for Number of Islands.
+Memory Usage: 41.7 MB, less than 28.53% of Java online submissions for Number of Islands.*/
+    /*third try: change to LinkedList, and move out of the loop, result:
+    * Runtime: 4 ms, faster than 18.69% of Java online submissions for Number of Islands.
+Memory Usage: 41.4 MB, less than 52.60% of Java online submissions for Number of Islands.
+*  so the loop can't beat the recursive call.
+* */
     public static int solution2(char[][] grid) {
         int row = grid.length;
         int col = grid[0].length;
-        int[][] flags = new int[row][col];
         int count = 0;
+        Queue<Point> island = new LinkedList<>();
         for (int i = 0; i < row; ++i) {
             for (int j = 0; j < col; ++j) {
-                if (grid[i][j] == '1' && flags[i][j] <= 0) {
+                if (grid[i][j] == '1') {
                     ++count;
-                    flags[i][j] = count;
-                    Queue<Point> island = new ArrayDeque<>();
+                    island.clear();
+                    grid[i][j] = 'V';
                     island.add(new Point(i, j));
                     while (!island.isEmpty()) {
                         Point p = island.poll();
                         // top
-                        if (p.i > 0 && grid[p.i - 1][p.j] == '1' && flags[p.i - 1][p.j] <= 0) {
-                            flags[p.i - 1][p.j] = count;
+                        if (p.i > 0 && grid[p.i - 1][p.j] == '1') {
+                            grid[p.i - 1][p.j] = 'V';
                             island.add(new Point(p.i - 1, p.j));
                         }
                         // left
-                        if (p.j > 0 && grid[p.i][p.j - 1] == '1' && flags[p.i][p.j - 1] <= 0) {
-                            flags[p.i][p.j - 1] = count;
+                        if (p.j > 0 && grid[p.i][p.j - 1] == '1') {
+                            grid[p.i][p.j - 1] = 'V';
                             island.add(new Point(p.i, p.j - 1));
                         }
                         // right
-                        if (p.i < row - 1 && grid[p.i + 1][p.j] == '1' && flags[p.i + 1][p.j] <= 0) {
-                            flags[p.i + 1][p.j] = count;
+                        if (p.i < row - 1 && grid[p.i + 1][p.j] == '1') {
+                            grid[p.i + 1][p.j] = 'V';
                             island.add(new Point(p.i + 1, p.j));
                         }
                         // bottom
-                        if (p.j < col - 1 && grid[p.i][p.j + 1] == '1' && flags[p.i][p.j + 1] <= 0) {
-                            flags[p.i][p.j + 1] = count;
+                        if (p.j < col - 1 && grid[p.i][p.j + 1] == '1') {
+                            grid[p.i][p.j + 1] = 'V';
                             island.add(new Point(p.i, p.j + 1));
                         }
                     }
@@ -124,6 +130,50 @@ Memory Usage: 41.5 MB, less than 52.80% of Java online submissions for Number of
             }
         }
         return count;
+    }
+
+    public static boolean inBound(int R, int C, int row, int col) {
+        return (row >= 0 && row < R && col >= 0 && col < C);
+    }
+
+    // marks visited objects as 'V'
+    public static void DepthFirstSearch(char[][] grid, int R, int C, int i, int j) {
+        if ((!inBound(R, C, i, j)) || (grid[i][j] == '0') || (grid[i][j] == 'V')) return;
+
+        grid[i][j] = 'V';
+
+        // visit adjacent '1's
+        if (inBound(R, C, i, j + 1)) DepthFirstSearch(grid, R, C, i, j + 1);
+        if (inBound(R, C, i + 1, j)) DepthFirstSearch(grid, R, C, i + 1, j);
+        if (inBound(R, C, i, j - 1)) DepthFirstSearch(grid, R, C, i, j - 1);
+        if (inBound(R, C, i - 1, j)) DepthFirstSearch(grid, R, C, i - 1, j);
+    }
+
+    // use Depth First Search algo - Recursive function
+    /*
+    * Runtime: 1 ms, faster than 100.00% of Java online submissions for Number of Islands.
+Memory Usage: 41.6 MB, less than 28.53% of Java online submissions for Number of Islands.*/
+    public static int DFS(char[][] grid) {
+        int R = grid.length;
+        int C = grid[0].length;
+        int numIslands = 0;
+
+        // sweep
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                char c = grid[i][j];
+                if (c == 'V') {
+                    continue;
+                }
+
+                // an un-visited '1' means a new island which needs to be marked
+                if (c == '1') {
+                    numIslands++;
+                    DepthFirstSearch(grid, R, C, i, j);
+                }
+            }
+        }
+        return numIslands;
     }
 
     public static void main(String[] args) {
