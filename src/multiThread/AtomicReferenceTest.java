@@ -1,4 +1,4 @@
-package multiThread;/*
+package multithread;/*
  * MIT License
  *
  * Copyright (c) 2019 Michael Pogrebinsky
@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.LockSupport;
-
-import static java.lang.Thread.yield;
 
 /**
  * Atomic References, Compare And Set, Lock-Free High Performance Data Structure
