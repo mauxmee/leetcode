@@ -7,6 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class BlockingQueueEx
 {
+	/**
+	 *
+	 */
 	public static class Producer implements Runnable
 	{
 		private final BlockingQueue<Integer> queue;
