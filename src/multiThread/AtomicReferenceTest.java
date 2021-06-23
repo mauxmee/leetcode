@@ -100,6 +100,11 @@ public class AtomicReferenceTest {
 
         public T pop() {
             StackNode<T> currentHeadNode = head.get();
+            if(currentHeadNode == null)
+            {
+                counter.incrementAndGet();
+                return null;
+            }
             StackNode<T> newHeadNode;
 
             while (currentHeadNode != null) {
