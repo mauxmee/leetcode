@@ -100,8 +100,7 @@ public class AtomicReferenceTest {
 
         public T pop() {
             StackNode<T> currentHeadNode = head.get();
-            if(currentHeadNode == null)
-            {
+            if (currentHeadNode == null) {
                 counter.incrementAndGet();
                 return null;
             }
@@ -112,7 +111,7 @@ public class AtomicReferenceTest {
                 if (head.compareAndSet(currentHeadNode, newHeadNode)) {
                     break;
                 } else {
-                   // LockSupport.parkNanos(1);
+                    // LockSupport.parkNanos(1);
                     Thread.yield();
                     currentHeadNode = head.get();
                 }
@@ -160,7 +159,6 @@ public class AtomicReferenceTest {
 
         public StackNode(T value) {
             this.value = value;
-            this.next = next;
         }
     }
 }
