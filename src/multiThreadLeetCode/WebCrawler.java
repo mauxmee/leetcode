@@ -1,5 +1,7 @@
 package multiThreadLeetCode;
 
+import java.util.List;
+
 /*
 Given a url startUrl and an interface HtmlParser, implement a Multi-threaded web crawler to crawl all links that are under the same hostname as startUrl. 
 
@@ -92,10 +94,15 @@ interface HtmlParser {
  *     public List<String> getUrls(String url) {}
  * }
  */
+
 public class WebCrawler {
-		public List<String> crawl(String startUrl, HtmlParser htmlParser) {
+    static interface HtmlParser {
+        default public List<String> getUrls(String url) {
+            return null;
+        }
+    }
 
-		}
+    public List<String> crawl(String startUrl, HtmlParser htmlParser) {
+        return null;
+    }
 }
-
-

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class DesignServiceMultiThreadImpl implements DesignService {
     AtomicInteger m_id = new AtomicInteger(0);
@@ -48,7 +49,7 @@ public class DesignServiceMultiThreadImpl implements DesignService {
         if (userDesigns == null) {
             throw new RuntimeException("No such User " + ctx.getUserId());
         }
-        return userDesigns.keySet().stream().toList();
+        return userDesigns.keySet().stream().collect(Collectors.toList());
     }
 
     /**

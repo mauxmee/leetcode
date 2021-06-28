@@ -1,5 +1,9 @@
 package multiThreadLeetCode;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /*
 * Implement a thread-safe bounded blocking queue that has the following methods:
 
@@ -80,21 +84,58 @@ At most 40 calls will be made to enque, deque, and size.
 链接：https://leetcode-cn.com/problems/design-bounded-blocking-queue
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 * */
-public class BoundedBlockingQueue
-{
-	public BoundedBlockingQueue(int capacity) {
+public class BoundedBlockingQueue {
+    Lock lock = new ReentrantLock();
+    Condition full = lock.newCondition();
+    Condition empty = lock.newCondition();
+    // the first element is root, will not be used, head and tail point to the root at start
+    int[] items;
+    int putIndex = 0, getIndex = 0, size = 0;
 
-	}
+    public BoundedBlockingQueue(int capacity) {
+        items = new int[capacity];
+    }
 
-	public void enqueue(int element) throws InterruptedException {
+    int forward(int i) {
+        if (++i >= items.length) {
+            i = 0;
+        }
+        return i;
+    }
 
-	}
+    public void enqueue(int element) throws InterruptedException {
+        lock.lock();
+        try {
+            while (size == items.length) {
+                full.await();
+            }
+            items[putIndex ++] = element;
+            putIndex %= items.length;
+            size++;
+            empty.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
 
-	public int dequeue() throws InterruptedException {
+    public int dequeue() throws InterruptedException {
+        int element;
+        lock.lock();
+        try {
+            while(size == 0) {
+                empty.await();
+            }
+            element = items[getIndex++];
+            getIndex %= items.length;
+            size--;
+            full.signal();
+        } finally {
+            lock.unlock();
+        }
+        return element;
+    }
 
-	}
-
-	public int size() {
-
-	}
+    public int size() {
+        return size;
+    }
 }

@@ -1,4 +1,7 @@
 package multiThreadLeetCode;
+
+import java.util.function.IntConsumer;
+
 /*
 * Suppose you are given the following code:
 

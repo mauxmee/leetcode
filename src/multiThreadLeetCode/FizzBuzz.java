@@ -1,5 +1,7 @@
 package multiThreadLeetCode;
 
+import java.util.function.IntConsumer;
+
 /*Write a program that outputs the string representation of numbers from 1 ton, however:
 
 If the number is divisible by 3, output "fizz".

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -167,13 +168,13 @@ public class CanvaExTest {
     }
 
     private AuthContext getRandomUser(Set<AuthContext> ctxs) {
-        List<AuthContext> users = ctxs.stream().toList();
+        List<AuthContext> users = ctxs.stream().collect(Collectors.toList());
         int target = ThreadLocalRandom.current().nextInt(ctxs.size());
         return users.get(target);
     }
 
     private String getRandomUserDesign(Map<String, StringBuffer> userDesigns) {
-        List<String> designIds = userDesigns.keySet().stream().toList();
+        List<String> designIds = userDesigns.keySet().stream().collect(Collectors.toList());
         int target = ThreadLocalRandom.current().nextInt(designIds.size());
         return designIds.get(target);
     }
