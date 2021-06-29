@@ -1,6 +1,11 @@
 package multiThreadLeetCode;
 
-/*
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.LockSupport;
+
+/* 1226
 * Five silent philosophers sit at a round table with bowls of spaghetti. Forks are placed between each pair of adjacent philosophers.
 
 Each philosopher must alternately think and eat. However, a philosopher can only eat spaghetti when they have both left and right forks. Each fork can be held by only one philosopher and so a philosopher can use the fork only if it is not being used by another philosopher. After an individual philosopher finishes eating, they need to put down both forks so that the forks become available to others. A philosopher can take the fork on their right or the one on their left as they become available, but cannot start eating before getting both forks.
@@ -48,18 +53,58 @@ Constraints:
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。*/
 public class DiningPhilosophers
 {
-	public DiningPhilosophers() {
 
+	private final static String Fork = "Fork";
+	// 使用中的fork
+	private final Map<String, Thread> forkMap = new ConcurrentHashMap<>();
+	// 等待中的哲学家线程
+	private final Map<String, Thread> threadMap = new ConcurrentHashMap<>();
+	// 最多执行支持同时四个哲学家拿到叉子，不然会死锁，大家都没饭吃
+	private final Semaphore semaphore = new Semaphore(4);
+
+	private final Object object = new Object();
+
+	public DiningPhilosophers() {
 	}
 
 	// call the run() method of any runnable to execute its code
 	public void wantsToEat(int philosopher,
-	                       Runnable pickLeftFork,
-	                       Runnable pickRightFork,
-	                       Runnable eat,
-	                       Runnable putLeftFork,
-	                       Runnable putRightFork) throws InterruptedException {
+						   Runnable pickLeftFork,
+						   Runnable pickRightFork,
+						   Runnable eat,
+						   Runnable putLeftFork,
+						   Runnable putRightFork) throws InterruptedException {
 
+		semaphore.acquire();
+		String leftFork = Fork + (philosopher + 1) % 5;
+		String rightFork = Fork + philosopher % 5;
+
+		synchronized (object) {
+			forkMap.computeIfAbsent(leftFork, k -> Thread.currentThread());
+			forkMap.computeIfAbsent(rightFork, k -> Thread.currentThread());
+		}
+		while (!(forkMap.get(leftFork) == Thread.currentThread() && forkMap.get(rightFork) == Thread.currentThread())) {
+			threadMap.put("philosopher" + philosopher, Thread.currentThread());
+			LockSupport.park();
+			synchronized (object) {
+				forkMap.computeIfAbsent(leftFork, k -> Thread.currentThread());
+				forkMap.computeIfAbsent(rightFork, k -> Thread.currentThread());
+			}
+		}
+		pickLeftFork.run();
+		pickRightFork.run();
+		eat.run();
+		putLeftFork.run();
+		putRightFork.run();
+		forkMap.remove(leftFork);
+		forkMap.remove(rightFork);
+		threadMap.forEach((key, value) -> LockSupport.unpark(value));
+		semaphore.release();
 	}
+
+//		作者：gifted-khayyamq0n
+//		链接：https://leetcode-cn.com/problems/the-dining-philosophers/solution/locksupportconcurrenthashmap2semaphoresh-vsby/
+//		来源：力扣（LeetCode）
+//		著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 }
