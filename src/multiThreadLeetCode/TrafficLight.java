@@ -1,5 +1,7 @@
 package multiThreadLeetCode;
 
+import java.util.concurrent.Semaphore;
+
 /*
 * There is an intersection of two roads. First road is road A where cars travel from North to South in direction 1 and from South to North in direction 2. Second road is road B where cars travel from West to East in direction 3 and from East to West in direction 4.
 
@@ -65,19 +67,39 @@ arrivalTimes is non-decreasing
 来源：力扣（LeetCode）
 链接：https://leetcode-cn.com/problems/traffic-light-controlled-intersection
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。*/
-public class TrafficLight
-{
-	public TrafficLight() {
+public class TrafficLight {
+    private Semaphore greenLight = new Semaphore(1, true);//红绿灯遥控器
+    private boolean road1CanGo = true;//表示道路1是绿灯
 
-	}
 
-	public void carArrived(
-			int carId,           // ID of the car
-			int roadId,          // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)
-			int direction,       // Direction of the car
-			Runnable turnGreen,  // Use turnGreen.run() to turn light to green on current road
-			Runnable crossCar    // Use crossCar.run() to make car cross the intersection
-	) {
+    public TrafficLight() {
 
-	}
+    }
+
+    public void carArrived(
+            int carId,           // ID of the car
+            int roadId,          // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)
+            int direction,       // Direction of the car
+            Runnable turnGreen,  // Use turnGreen.run() to turn light to green on current road
+            Runnable crossCar    // Use crossCar.run() to make car cross the intersection
+    ) {
+        try {
+            greenLight.acquire();//申请获取遥控器
+            //如果当前车道已经是绿灯了，直接通过
+            if ((roadId == 1 && road1CanGo) || (roadId == 2 && !road1CanGo)) {
+                crossCar.run();
+            } else if (roadId == 1) {//否则，如果道路1不是绿灯，用遥控器变成绿灯
+                turnGreen.run();
+                road1CanGo = true;
+                crossCar.run();
+            } else if (roadId == 2) {//如果道路2不是绿灯，用遥控器变成绿灯
+                turnGreen.run();
+                road1CanGo = false;
+                crossCar.run();
+            }
+            greenLight.release();//最后把遥控器归还
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
