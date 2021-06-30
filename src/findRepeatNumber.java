@@ -15,9 +15,20 @@
 链接：https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof
 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。*/
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class findRepeatNumber {
 
     public int solution(int[] nums) {
-        return 0;
+        // test
+        Set<Integer> cache = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (cache.contains(i)) {
+                return i;
+            }
+            cache.add(i);
+        }
+        return -1;
     }
 }
