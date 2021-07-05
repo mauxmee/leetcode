@@ -50,11 +50,10 @@ public class FooBar {
     }
 
     public void foo(Runnable printFoo) throws InterruptedException {
-
         for (int i = 0; i < n; i++) {
             lock.lock();
             try {
-                if (count != 1) {
+                while (count != 1) {
                     barCon.await();
                 }
                 // printFoo.run() outputs "foo". Do not change or remove this line.
@@ -68,11 +67,10 @@ public class FooBar {
     }
 
     public void bar(Runnable printBar) throws InterruptedException {
-
         for (int i = 0; i < n; i++) {
             lock.lock();
             try {
-                if (count != 2) {
+                while (count != 2) {
                     fooCon.await();
                 }
                 // printFoo.run() outputs "foo". Do not change or remove this line.

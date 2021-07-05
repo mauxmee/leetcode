@@ -96,13 +96,8 @@ public class BoundedBlockingQueue {
         items = new int[capacity];
     }
 
-    int forward(int i) {
-        if (++i >= items.length) {
-            i = 0;
-        }
-        return i;
-    }
-
+    /*typical producer and consumer implementation:
+    * one lock, two conditions, check boundary conditions in while loop to wait one condition.*/
     public void enqueue(int element) throws InterruptedException {
         lock.lock();
         try {

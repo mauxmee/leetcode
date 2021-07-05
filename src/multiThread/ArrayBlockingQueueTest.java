@@ -38,6 +38,13 @@ public class ArrayBlockingQueueTest {
                 pool.execute(new Producer());
                 pool.execute(new Consumer());
             }
+            /*
+            * CyclicBarrier叫循环栅栏，它实现让一组线程等待至某个状态之后再全部 同时执行，而且当所有等待线程被释放后，
+            * CyclicBarrier可以被重复使 用。CyclicBarrier的典型应用场景是用来等待并发线程结束。
+            * CyclicBarrier 的主要方法是await()，await。每被调用一次，计数便会减少1,并阻塞住 当前线程。
+            * 当计数减至0时，阻塞解除，所有在此CyclicBarrier上面阻塞 的线程开始运行。
+            在这之后，如果再次调用await。，计数就又会变成N-1，新一轮重新开 始，
+            * 这便是Cyclic的含义所在。CyclicBarrier.await()带有返回值，用来表 示当前线程是第几个到达这个Barrier的线程。*/
             barrier.await(); // 等待所有的线程就绪
             barrier.await(); // 等待所有的线程执行完成
             System.out.println("result，put==take :" + (putSum.get() == takeSum.get()));
