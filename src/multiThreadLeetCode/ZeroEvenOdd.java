@@ -18,15 +18,12 @@ Thread B will calleven()which should only ouput even numbers.
 Thread C will call odd()which should only output odd numbers.
 Each of the threads is given aprintNumber method to outputan integer. Modify the given program to output the series010203040506... where the length of the series must be 2n.
 
-
-
 Example 1:
-
 Input: n = 2
 Output: "0102"
 Explanation: There are three threads being fired asynchronously. One of them calls zero(), the other calls even(), and the last one calls odd(). "0102" is the correct output.
-Example 2:
 
+* Example 2:
 Input: n = 5
 Output: "0102030405"
 
