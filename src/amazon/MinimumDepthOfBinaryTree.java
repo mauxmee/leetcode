@@ -96,6 +96,90 @@ public class MinimumDepthOfBinaryTree {
                 minDepth_recursive_2(root.right)) + 1;
     }
 
+    int maxDepth(Node node) {
+        if (node == null) return 0;
+        else {
+            int lDepth = maxDepth(node.left);
+            int rDepth = maxDepth(node.right);
+            return Math.max(lDepth, rDepth) + 1;
+        }
+    }
+
+    /*
+     * Time Complexity – O(n^2) Space Complexity – O(1)
+     * */
+    void printLevelsRecursively(Node root) {
+        int height = maxDepth(root);
+
+        for (int i = 1; i <= height; i++) {
+            System.out.print("Level " + i + " : ");
+            printSingleLevelRecursively(root, i);
+            System.out.println();
+        }
+    }
+
+    void printSingleLevelRecursively(Node root, int level) {
+        if (root == null)
+            return;
+
+        if (level == 1) {
+            System.out.print(root.data + " ");
+        } else if (level > 1) {
+            printSingleLevelRecursively(root.left, level - 1);
+            printSingleLevelRecursively(root.right, level - 1);
+        }
+    }
+
+    /*Time Complexity – O(n) Space Complexity – O(n)*/
+    // Breadth first search : use a queue
+    void printLevelsIteratively(Node root) {
+        Queue<Node> queue = new LinkedList<>();
+
+        queue.add(root);
+        int level = 1;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            System.out.print(level + ": ");
+            for (int i = 0; i < size; ++i) {
+                Node node = queue.peek();
+                if (node != null) {
+                    System.out.print(node.data + " ");
+                    queue.remove();
+
+                    if (node.left != null)
+                        queue.add(node.left);
+
+                    if (node.right != null)
+                        queue.add(node.right);
+                }
+            }
+            level++;
+            System.out.println();
+        }
+    }
+
+    /*depth first search use stack, here use recursively call */
+    void dfs_preOrder(Node node) {
+        if (node == null) return;
+        System.out.print(node.data + "->");
+        dfs_preOrder(node.left);
+        dfs_preOrder(node.right);
+    }
+
+    void dfs_inOrder(Node node) {
+        if (node == null) return;
+        dfs_preOrder(node.left);
+        System.out.print(node.data + "->");
+        dfs_preOrder(node.right);
+    }
+
+    void dfs_postOrder(Node node) {
+        if (node == null) return;
+        dfs_preOrder(node.left);
+        dfs_preOrder(node.right);
+        System.out.print(node.data + "->");
+    }
+
     @BeforeEach
     public void init() {
         root = new Node(1);
@@ -107,18 +191,8 @@ public class MinimumDepthOfBinaryTree {
         root.left.left.left.left = new Node(7);
     }
 
-    int maxDepth(Node node) {
-        if (node == null) return 0;
-        else {
-            int lDepth = maxDepth(node.left);
-            int rDepth = maxDepth(node.right);
-            return Math.max(lDepth, rDepth) + 1;
-        }
-    }
-
     @Test
     public void test_minDepth() {
-
         assertEquals(minDepth_while(root), 2);
         assertEquals(minDepth_recursive(root, 0), 2);
         assertEquals(minDepth_recursive_2(root), 2);
@@ -127,5 +201,25 @@ public class MinimumDepthOfBinaryTree {
     @Test
     public void test_maxDepth() {
         assertEquals(maxDepth(root), 5);
+    }
+
+    @Test
+    public void test_printBFSRecursively() {
+        printLevelsRecursively(root);
+    }
+
+    @Test
+    public void test_printBFSIteratively() {
+        printLevelsIteratively(root);
+    }
+
+    @Test
+    public void test_dfs() {
+        System.out.print("preOrder: ");
+        dfs_preOrder(root);
+        System.out.print("\ninOrder: ");
+        dfs_inOrder(root);
+        System.out.print("\npostOrder: ");
+        dfs_postOrder(root);
     }
 }
