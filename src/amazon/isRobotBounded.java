@@ -1,7 +1,9 @@
 package amazon;
 
-import java.util.Arrays;
-import java.util.LinkedList;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 1041. Robot Bounded In Circle
@@ -34,51 +36,60 @@ import java.util.LinkedList;
  */
 
 public class isRobotBounded {
-
-    class Pair {
-        int x;
-        int y;
-
-        public Pair(int x, int y) {
-            this.x = x;
-            this.y = y;
+//执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+//内存消耗：36.1 MB, 在所有 Java 提交中击败了97.34%的用户
+    public boolean solution(String instructions) {
+        // record the position
+        int x = 0, y = 0;
+        // N:0, W:1, S:2 E:3
+        int direction = 0;
+        // L : (direction + 1) % 4
+        // R: (direction -1) % 4;
+        // G: direction 0: y + 1, 1: x -1; 2: y -1; 3: x + 1
+        for (int i = 0; i < instructions.length(); i++) {
+            char c = instructions.charAt(i);
+            if (c == 'G') {
+                switch (direction) {
+                    case 0:
+                        ++y;
+                        break;
+                    case 1:
+                        --x;
+                        break;
+                    case 2:
+                        --y;
+                        break;
+                    case 3:
+                        ++x;
+                        break;
+                    default:
+                        break;
+                }
+            } else if (c == 'L') {
+                direction = (direction + 1) % 4;
+            } else if (c == 'R') {
+                // can't directly -1 since 0 -> -1, so need to do +4-1
+                direction = (direction + 3) % 4;
+            }
         }
-
-        public int instance2() {
-            return x * x + y * y;
-        }
+        // after all instrument processed, check the position and direction
+//        return !((x > 0 && direction == 3) ||
+//                (x < 0 && direction == 1) ||
+//                (y > 0 && direction == 0) ||
+//                (y < 0 && direction == 2));
+        // correct condition: if it returns back to original point;
+        // or the direction is not the same direction as last one, it'll eventually in a circle
+        return (x == 0 && y == 0) || direction != 0;
     }
 
-
-    class Direction    {
-        char name;
-        char left;
-        char right;
-
-        public Direction( char n, char l, char r)
-        {
-            name = n;
-            left = l;
-            right = r;
-        }
+    @Test
+    public void test_solution() {
+        assertEquals(solution("GGLLGG"), true);
+        assertEquals(solution("GG"), false);
+        assertEquals(solution("GL"), true);
+        assertEquals(solution("GLRLLGLL"), true);
+        assertEquals(solution("LLGRL"), true);
+        assertEquals(solution("GLGLGGLGL"), false);
+        assertEquals(solution("RGL"), false);
     }
-
-//    // N: y + 1; S: y - 1; E: x + 1, W: x - 1
-//    // initial direction is E
-//    public boolean solution(String instructions) {
-//        if (instructions == null || instructions.isEmpty()) return true;
-//        int x = 0, y = 0, d = 0, count = 0;
-//        LinkedList<Character> directions = new LinkedList<>(Arrays.asList('E', 'N', 'W', 'S'));
-//        while (count++ < 4) {
-//            for (char d : instructions.toCharArray()) {
-//                if (d)
-//            }
-//        }
-//        return false;
-//    }
-//
-//    public static void main(String[] args) {
-//        boolean ret = new isRobotBounded(direction).solution("GGLLGG");
-//
-//    }
 }
