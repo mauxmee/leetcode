@@ -48,7 +48,7 @@ Memory Usage: 114.8 MB, less than 61.35% of Java online submissions for Critical
 		We will discuss the condition next.
 		追溯值
 		追溯值用来表示从当前节点 x 作为搜索树的根节点出发，能够访问到的所有节点中，时间戳最小的值 —— low[x]。
-		那么，我们要限定下什么是“能够访问到的所有节点”？，其需要满足下面的条件之一即可：
+		那么，我们要限定下什么是“能够访问到 的所有节点”？，其需要满足下面的条件之一即可：
 
 		以 x 为根的搜索树的所有节点
 		通过一条非搜索树上的边，能够到达搜索树的所有节点
