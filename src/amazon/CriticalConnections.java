@@ -1,7 +1,8 @@
 package amazon;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -152,7 +153,7 @@ Memory Usage: 114.8 MB, less than 61.35% of Java online submissions for Critical
 		input.add( l );
 	}
 
-	@Before
+	@BeforeEach
 	public void init()
 	{
 		add( 0, 1 );
