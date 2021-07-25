@@ -1,5 +1,6 @@
-REquirements:
-Table:Activity
+512. Game Play Analysis II
+SQL架构
+Table: Activity
 
 +--------------+---------+
 | Column Name  | Type    |
@@ -14,7 +15,7 @@ This table shows the activity of players of some game.
 Each row is a record of a player who logged in and played a number of games (possibly 0) before logging out on some day using some device.
 
 
-Write an SQL query that reports thefirst login date for each player.
+Write a SQL query that reports the device that is first logged in for each player.
 
 The query result format is in the following example:
 
@@ -30,17 +31,11 @@ Activity table:
 +-----------+-----------+------------+--------------+
 
 Result table:
-+-----------+-------------+
-| player_id | first_login |
-+-----------+-------------+
-| 1         | 2016-03-01  |
-| 2         | 2017-06-25  |
-| 3         | 2016-03-02  |
-+-----------+-------------+
-
---------------answer------------------------------
-
-Solution:
-SELECT player_id, MIN(event_date) AS 'first_login'
-FROM Activity
-GROUP BY player_id
++-----------+-----------+
+| player_id | device_id |
++-----------+-----------+
+| 1         | 2         |
+| 2         | 3         |
+| 3         | 1         |
++-----------+-----------+
+通过次数15,491提交次数28,959
