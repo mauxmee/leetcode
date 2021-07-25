@@ -26,15 +26,13 @@ Id is the primary key for this table.
 Each row contains the ID and the name of one department.
 
 
-A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
+A company executives are interested in seeing who earns the most money in each of the company
+departments. A high earner in a department is an employee who has a salary in the top three
+unique salaries for that department.
 
 Write an SQL query to find the employees who are high earners in each of the departments.
-
 Return the result table in any order.
-
 The query result format is in the following example:
-
-
 
 Employee table:
 +----+-------+--------+--------------+
@@ -78,4 +76,67 @@ In the Sales department:
 - Henry earns the highest salary
 - Sam earns the second-highest salary
 - There is no third-highest salary as there are only two employees
-通过次数63,695提交次数130,538
+
+-- solution 1
+-- SELECT d.Name AS Department, e.Name as Employee, e.Salary
+-- FROM Department AS d, Employee AS e
+-- WHERE d.Id == e.DepartmentId AND
+-- (e.Salary, d.Id) IN (
+-- SELECT distinct e.Salary, d.Id
+-- FROM Department AS d, Employee AS e
+-- GROUP BY e.Salary
+-- ORDER BY e.Salary DESC LIMIT 3
+-- );
+
+--- solution from official website:
+Approach: Using JOIN and sub-query [Accepted]
+Algorithm
+
+A top 3 salary in this company means there is no more than 3 salary bigger than itself in the company.
+
+select e1.Name as 'Employee', e1.Salary
+from Employee e1
+where 3 >
+(
+    select count(distinct e2.Salary)
+    from Employee e2
+    where e2.Salary > e1.Salary
+)
+;
+
+In this code, we count the salary number of which is bigger than e1.Salary.
+So the output is as below for the sample data.
+
+| Employee | Salary |
+|----------|--------|
+| Henry    | 80000  |
+| Max      | 90000  |
+| Randy    | 85000  |
+
+Then, we need to join the Employee table with Department in order to retrieve
+the department information.
+
+MySQL
+
+SELECT d.Name AS 'Department', e1.Name AS 'Employee', e1.Salary
+FROM Employee e1
+         JOIN
+     Department d ON e1.DepartmentId = d.Id
+WHERE 3 > (SELECT COUNT(DISTINCT e2.Salary)
+           FROM Employee e2
+           WHERE e2.Salary > e1.Salary
+             AND e1.DepartmentId = e2.DepartmentId
+)
+;
+
+---- solution 2
+If you have access to Dense_Rank (), then the following query will work.
+
+select d.Name as Department, a. Name as Employee, a. Salary
+from (
+select e.*, dense_rank() over (partition by DepartmentId order by Salary desc) as DeptPayRank
+from Employee e
+) a
+join Department d
+on a. DepartmentId = d. Id
+where DeptPayRank <=3;
