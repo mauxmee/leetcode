@@ -31,6 +31,8 @@ public class MinimumDepthOfBinaryTree {
         }
     }
 
+
+// DFS if scan iteratively use a Queue
     public int minDepth_while(Node root) {
         if (root == null) return 0;
         Queue<qItem> q = new LinkedList<>();
@@ -62,6 +64,7 @@ public class MinimumDepthOfBinaryTree {
         return 0;
     }
 
+    // time complexity: O(2N)
     int minDepth_recursive(Node root, int level) {
         if (root == null)
             return level;
@@ -72,7 +75,7 @@ public class MinimumDepthOfBinaryTree {
     }
 
     /**
-     * Time complexity of above solution is O(n) as it traverses the tree only once.
+     * Time complexity of above solution is O(2n) as it traverses the tree only once.
      */
     int minDepth_recursive_2(Node root) {
         // Corner case. Should never be hit unless the code is
@@ -96,6 +99,8 @@ public class MinimumDepthOfBinaryTree {
                 minDepth_recursive_2(root.right)) + 1;
     }
 
+    // in a nutshell, depth first search ( DFS) use recursive way
+    // time: O(2N)
     int maxDepth(Node node) {
         if (node == null) return 0;
         else {
@@ -111,11 +116,14 @@ public class MinimumDepthOfBinaryTree {
     void printLevelsRecursively(Node root) {
         int height = maxDepth(root);
 
+        // height maybe number of node (n)
         for (int i = 1; i <= height; i++) {
             System.out.print("Level " + i + " : ");
+            // recursive call number is 2n
             printSingleLevelRecursively(root, i);
             System.out.println();
         }
+        // so totally loop number is 2N + n * 2N = O(n^2)
     }
 
     void printSingleLevelRecursively(Node root, int level) {
@@ -132,6 +140,8 @@ public class MinimumDepthOfBinaryTree {
 
     /*Time Complexity – O(n) Space Complexity – O(n)*/
     // Breadth first search : use a queue
+    // each loop the number of the queue is at the same level
+    // remove the head when access it from the queue, add it's left and right to the queue
     void printLevelsIteratively(Node root) {
         Queue<Node> queue = new LinkedList<>();
 

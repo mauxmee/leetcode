@@ -11,6 +11,7 @@ Find the 3-sequence visited by the largest number of users. If there is more tha
 
 
 
+
 Example 1:
 
 Input: username = ["joe","joe","joe","james","james","james","james","mary","mary","mary"], timestamp = [1,2,3,4,5,6,7,8,9,10], website = ["home","about","career","home","cart","maps","home","home","about","career"]
