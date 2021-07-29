@@ -40,8 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MergeKSortedList {
+    public static final int INVALID = Integer.MAX_VALUE;
+
     public class ListNode {
-        int val = 0;
+        int val = INVALID;
         ListNode next = null;
 
         ListNode() {
@@ -57,14 +59,50 @@ public class MergeKSortedList {
         }
     }
 
+    /*
+    Runtime: 675 ms, faster than 5.02% of Java online submissions for Merge k Sorted Lists.
+    Memory Usage: 40.4 MB, less than 76.74% of Java online submissions for Merge k Sorted Lists.
+     */
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists == null) return null;
-        ListNode head = new ListNode();
+        ListNode head = new ListNode(), nextNode = head, node = null;
         int n = lists.length;
-        List<ListNode> currNode = new ArrayList<>(n);
+        List<ListNode> currNodes = new ArrayList<>(n);
+        // assign head of each nodes to the list
         for (int i = 0; i < n; i++) {
-            
+            currNodes.add(lists[i]);
         }
+        do {
+            node = getMinNode(currNodes);
+            nextNode.next = node;
+            nextNode = nextNode.next;
+        } while (node != null);
+        return head.next;
+    }
+
+    private ListNode getMinNode(List<ListNode> currNodes) {
+        int index = -1, value = INVALID;
+        ListNode n;
+        for (int i = 0; i < currNodes.size(); ++i) {
+            n = currNodes.get(i);
+            if (n != null && n.val < value) {
+                index = i;
+                value = n.val;
+            }
+        }
+        if (index == -1) return null;
+        n = currNodes.get(index);
+        currNodes.set(index, n.next);
+        return n;
+    }
+
+    private String printList(ListNode n) {
+        StringBuffer sb = new StringBuffer();
+        while (n != null) {
+            sb.append(n.val).append(",");
+            n = n.next;
+        }
+        return sb.toString();
     }
 
     @Test
@@ -74,16 +112,15 @@ public class MergeKSortedList {
         ListNode n3 = new ListNode(2, new ListNode(6));
 
         ListNode[] lists = {n1, n2, n3};
-        mergeKLists(lists);
-
+        System.out.println(printList(mergeKLists(lists)));
     }
 
     @Test
     public void test_mergeKList_empty() {
         ListNode[] lists = {};
-        mergeKLists(lists);
+        System.out.println(printList(mergeKLists(lists)));
         ListNode dummy = new ListNode();
         ListNode[] lists2 = {dummy};
-        mergeKLists(lists2);
+        System.out.println(printList(mergeKLists(lists2)));
     }
 }
