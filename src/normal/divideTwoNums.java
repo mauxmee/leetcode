@@ -1,3 +1,5 @@
+package normal;
+
 public class divideTwoNums {
     public static int divide(int dividend, int divisor) {
         if (divisor == 1) return dividend;

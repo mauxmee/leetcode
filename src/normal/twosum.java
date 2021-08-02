@@ -1,3 +1,5 @@
+package normal;
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,7 +9,7 @@ import java.util.stream.IntStream;
 public class twosum {
     private static final int LOW_BOUND = -1 * 1000000000;
     private static final int HIGH_BOUND = 1000000000;
-    private static final String INPUT_FILE = "twosum.input.txt";
+    private static final String INPUT_FILE = "normal.twosum.input.txt";
 
     public static boolean invalidInput(int n) {
         return n < LOW_BOUND || n > HIGH_BOUND;
