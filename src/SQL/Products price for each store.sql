@@ -68,7 +68,7 @@ FROM products
 [0, null, 100, null],
 [1, 70, null, null],
 [1, null, null, 80]
- 
+
 然后通过group by分组计算，由于group by默认取第一行数据所以通过聚合函数的方式选取指定列中有效的数据
 在mysql中的语句执行顺序是
 from -> on -> join -> where -> group by -> 聚集函数 -> having -> select ->
