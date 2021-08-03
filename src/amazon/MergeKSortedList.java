@@ -34,10 +34,12 @@ lists[i] is sorted in ascending order.
 The sum of lists[i].length won't exceed 10^4.
 通过次数286,766提交次数516,009*/
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class MergeKSortedList {
     public static final int INVALID = Integer.MAX_VALUE;
@@ -105,14 +107,47 @@ public class MergeKSortedList {
         return sb.toString();
     }
 
-    @Test
-    public void test_mergeKLists() {
+    //Runtime: 5 ms, faster than 50.10% of Java online submissions for Merge k Sorted Lists.
+    //Memory Usage: 40.1 MB, less than 92.20% of Java online submissions for Merge k Sorted Lists.
+    public ListNode mergeKLists_priorityQueue(ListNode[] lists) {
+        // create a min priority queue by comparing the ListNode's value (val)
+        PriorityQueue<ListNode> queue = new PriorityQueue<>((n1, n2) -> n1.val - n2.val);
+        for (ListNode n : lists) {
+            while (n != null) {
+                //// If n is directly added to queue then there will be cycled in linked list
+                // as the node will have next pointed to the next node
+                queue.add(new ListNode(n.val));
+                n = n.next;
+            }
+        }
+        ListNode head = queue.poll(), itr = head;
+        while (!queue.isEmpty()) {
+            itr.next = queue.poll();
+            itr = itr.next;
+        }
+        return head;
+    }
+
+    ListNode[] lists = null;
+
+    @BeforeEach
+    public void init() {
         ListNode n1 = new ListNode(1, new ListNode(4, new ListNode(5)));
         ListNode n2 = new ListNode(1, new ListNode(3, new ListNode(4)));
         ListNode n3 = new ListNode(2, new ListNode(6));
 
-        ListNode[] lists = {n1, n2, n3};
+        ListNode[] lists1 = {n1, n2, n3};
+        lists = lists1;
+    }
+
+    @Test
+    public void test_mergeKLists() {
         System.out.println(printList(mergeKLists(lists)));
+    }
+
+    @Test
+    public void test_mergeKLists_priorityQueue() {
+        System.out.println(printList(mergeKLists_priorityQueue(lists)));
     }
 
     @Test
