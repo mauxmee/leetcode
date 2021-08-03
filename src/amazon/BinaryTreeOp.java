@@ -8,7 +8,7 @@ import java.util.Queue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MinimumDepthOfBinaryTree {
+public class BinaryTreeOp {
     Node root;
 
     static class Node {
