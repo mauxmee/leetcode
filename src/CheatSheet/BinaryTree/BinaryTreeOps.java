@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 public class BinaryTreeOps {
     //Definition for a binary tree node.
@@ -342,7 +345,8 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
                 new TreeNode(15), new TreeNode(7)));
         System.out.println(zigzagLevelOrder(root));
     }
-//Runtime: 1 ms, faster than 75.34% of Java online submissions for Binary Tree Zigzag Level Order Traversal.
+
+    //Runtime: 1 ms, faster than 75.34% of Java online submissions for Binary Tree Zigzag Level Order Traversal.
 //Memory Usage: 39.3 MB, less than 21.95% of Java online submissions for Binary Tree Zigzag Level Order Traversal.
     public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
@@ -379,7 +383,7 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     }
 
     /*
-    124. Binary Tree Maximum Path Sum
+    124. Binary Tree Maximum Path Sum (hard)
     A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has
      an edge connecting them. A node can only appear in the sequence at most once. Note that the path
      does not need to pass through the root.
@@ -402,8 +406,48 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     -1000 <= Node.val <= 1000
     通过次数140,825提交次数319,362
      */
+    /*
+    kxu: I didn't try, copy the solution from website
+    xplanation
+In this problem, we are looking for a path that has the maximum sum of its nodes, this part is not need to path through the root. For this explanation, I'll divide this desired path into left and right part, its left or right part can be null.
+For a node, there are 2 case:
+Case 1: Current node is the connection of the left and right part of desired path.
+In this case, we update our maxSum parameter.
+Case 2: Current node is in the left or the right part of the desired path.
+In this case, we simply return the branch that has the larger sum of its node.
+     */
+    int maxSum = Integer.MIN_VALUE;
+
     public int maxPathSum(TreeNode root) {
-        return 0;
+        dfs_maxPathSum(root);
+        return maxSum;
+    }
+
+    // postOrder DFS traverse O(N) Recursion
+    private int dfs_maxPathSum(TreeNode node) {
+        //base case  when we reach the end of the subtree
+        if (node == null) return 0;
+        //Traversing left subtree
+        int left = Math.max(dfs_maxPathSum(node.left), 0);
+        //Traversing the right subtree
+        int right = Math.max(dfs_maxPathSum(node.right), 0);
+
+        // forward path sum maximum
+        int forwardPathSumMax = Math.max(node.val + Math.max(left, right), node.val);
+        // current path sum maximum
+        int currentPathSumMax = Math.max(node.val + left + right, forwardPathSumMax);
+        // result maximum
+        maxSum = Math.max(maxSum, currentPathSumMax);
+        // forward path moving ahead
+        return forwardPathSumMax;
+    }
+
+    @Test
+    public void test_maxpathSum() {
+        TreeNode root = new TreeNode(-10,
+                new TreeNode(9), new TreeNode(20,
+                new TreeNode(15), new TreeNode(7)));
+        assertEquals(maxPathSum(root), 42);
     }
 
     /*
@@ -433,8 +477,21 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     -100 <= Node.val <= 100
     通过次数468,799提交次数613,129
      */
-    public int maxDepth(TreeNode root) {
-        return 0;
+    public int maxDepth(TreeNode node) {
+        if (node == null) return 0;
+        else {
+            int lDepth = maxDepth(node.left);
+            int rDepth = maxDepth(node.right);
+            return Math.max(lDepth, rDepth) + 1;
+        }
+    }
+
+    @Test
+    public void test_maxDepth() {
+        TreeNode root = new TreeNode(-10,
+                new TreeNode(9), new TreeNode(20,
+                new TreeNode(15), new TreeNode(7)));
+        assertEquals(maxDepth(root), 3);
     }
 
     /*
@@ -461,7 +518,23 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     通过次数311,449提交次数898,477
          */
     public boolean isValidBST(TreeNode root) {
-        return true;
+        if (root == null) return true;
+        return isBST(root, null, null);
+    }
+
+    public boolean isBST(TreeNode node, Integer min, Integer max) {
+        if (node == null) return true;
+        if (min != null && node.val <= min) return false;
+        if (max != null && node.val >= max) return false;
+        return isBST(node.left, min, node.val) && isBST(node.right, node.val, max);
+    }
+
+    @Test
+    public void test_isValidBST() {
+        TreeNode root = new TreeNode(5,
+                new TreeNode(4), new TreeNode(6,
+                new TreeNode(3), new TreeNode(7)));
+        assertFalse(isValidBST(root));
     }
 
     /*
@@ -481,8 +554,66 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     1 <= n <= 19
     通过次数144,740提交次数207,176
      */
+    /*Dynamic Programming */
     public int numTrees(int n) {
-        return 0;
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, 0);
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= n; i++) {
+            for (int j = 1; j <= i; j++) {
+                dp[i] = dp[i] + (dp[i - j] * dp[j - 1]);
+            }
+        }
+        return dp[n];
+    }
+
+    /*
+    when we choose i-th node as root node then it's left side will have i-1 node and right side
+    will have n-i nodes.
+    There is some common pattern for binary tree , if we have to answer something for root , we generally ask for answer from left child and right child , then give answer for complete tree
+eg.,
+1 finding maximum in tree
+2 . Height of tree
+3 . diameter of tree
+Here for n = 4 , consider it like an array {10,20,30,40} and this array is sorted array , and we have choice to make any of then element as root .
+let explore what all unique trees are possible
+
+if we pick 10 the all element are greater than 10 , goes its right , {20,30,40} goes right and this again become sub-problem .
+
+  			ans =  left_count * right_count
+		10
+		    \  [20,30 , 40]  // now find solution for this subproblem  for size 3
+if we pick 20 as root then smaller element than 10 goes to left and all element greater than 10 goes to right
+		      20
+	  [10] /      \  [30 , 40]  // now find solution for this subproblem  size 1 on left side and 2 size on right side
+if we pick 30 as root :
+
+		        30
+	[10 , 20] /	    \  [ 40]  // now find solution for this subproblem 2 size for left and 1 size for right
+
+
+if we pick 40 as root :
+
+		            40
+	[10 , 20,30] /	    // now find solution for this subproblem 3 size for left
+
+Now suppose we have answer for all subproblem then it is really going very easy to answer for n size problem . so now what we do is , find solution for smaller problem on top of that we answer bigger size problem
+     */
+    HashMap<Integer, Integer> countMap = new HashMap<>();
+
+    public int numTrees2(int n) {
+        if (n == 0 || n == 1)
+            return 1;
+        if (countMap.containsKey(n))
+            return countMap.get(n);
+
+        int c = 0;
+        for (int i = 1; i <= n; i++) {
+            c += numTrees(i - 1) * numTrees(n - i);
+        }
+        countMap.put(n, c);
+        return countMap.get(n);
     }
 
     /*
@@ -505,9 +636,30 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     The number of nodes in the tree is in the range [1, 104].
     -100 <= Node.val <= 100
     通过次数133,576提交次数244,954
+
      */
+    int maxEdge = Integer.MIN_VALUE;
+
     public int diameterOfBinaryTree(TreeNode root) {
-        return 0;
+        getDiameter(root);
+        return maxEdge;
+    }
+
+    private int getDiameter(TreeNode node) {
+        if (node == null) return 0;
+        int left = getDiameter(node.left);
+        int right = getDiameter(node.right);
+        //node=edge+1, i.e; edge=node-1
+        maxEdge = Math.max(maxEdge, left + right);
+        return Math.max(left, right) + 1;
+    }
+
+    @Test
+    public void test_diameterOfBinaryTree() {
+        TreeNode root = new TreeNode(5,
+                new TreeNode(4), new TreeNode(6,
+                new TreeNode(3), new TreeNode(7)));
+        assertEquals(diameterOfBinaryTree(root), 3);
     }
 
     /*
@@ -533,7 +685,40 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     通过次数355,560提交次数553,793
      */
     public List<List<Integer>> levelOrder(TreeNode root) {
-        return null;
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        // at first I used the queue, but it's hard to get the last element.
+        // so I use the linked list instead.
+        Queue<TreeNode> levelNodes = new LinkedList<>();
+        levelNodes.add(root);
+        while (!levelNodes.isEmpty()) {
+            List<Integer> levelRes = new ArrayList<>();
+            int size = levelNodes.size();
+            // get the last node's value
+            for (int i = 0; i < size; i++) {
+                TreeNode n = levelNodes.peek();
+                if (n != null) {
+                    levelNodes.remove();
+                    levelRes.add(n.val);
+                    if (n.left != null) {
+                        levelNodes.add(n.left);
+                    }
+                    if (n.right != null) {
+                        levelNodes.add(n.right);
+                    }
+                }
+            }
+            res.add(levelRes);
+        }
+        return res;
+    }
+
+    @Test
+    public void test_LevelOrder() {
+        TreeNode root = new TreeNode(3,
+                new TreeNode(9), new TreeNode(20,
+                new TreeNode(15), new TreeNode(7)));
+        System.out.println(levelOrder(root));
     }
 
     /*606. Construct String from Binary Tree (easy)
@@ -545,7 +730,7 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     Example 1:
     Input: root = [1,2,3,4]
     Output: "1(2(4))(3)"
-    Explanation: Originallay it needs to be "1(2(4)())(3()())", but you need to omit all the unnecessary
+    Explanation: Originally it needs to be "1(2(4)())(3()())", but you need to omit all the unnecessary
     empty parenthesis pairs. And it will be "1(2(4))(3)"
 
     Example 2:
@@ -559,7 +744,36 @@ Memory Usage: 37.9 MB, less than 31.46% of Java online submissions for Binary Tr
     -1000 <= Node.val <= 1000
     通过次数26,773提交次数47,207
      */
+
     public String tree2str(TreeNode root) {
-        return null;
+        if (root == null) return null;
+        StringBuffer sb = new StringBuffer();
+        sb.append(root.val);
+        String left = tree2str(root.left);
+        String right = tree2str(root.right);
+        if (left != null || right != null) {
+            if (left == null) {
+                sb.append("()");
+            } else {
+                sb.append("(").append(left).append(")");
+            }
+            if (right != null) {
+                sb.append("(").append(right).append(")");
+            }
+        }
+        return sb.toString();
+    }
+
+    @Test
+    public void test_tree2str() {
+        TreeNode root2 = new TreeNode(1,
+                new TreeNode(2, new TreeNode(4), null), new TreeNode(3));
+        assertEquals(tree2str(root2), "1(2(4))(3)");
+
+        TreeNode root = new TreeNode(1,
+                new TreeNode(2, null, new TreeNode(4)),
+                new TreeNode(3));
+        assertEquals(tree2str(root), "1(2()(4))(3)");
+
     }
 }

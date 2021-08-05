@@ -168,7 +168,8 @@ public class BinaryTreeOp {
         }
     }
 
-    /*depth first search use stack, here use recursively call */
+    /*depth first search use stack, here use recursively call
+    * node -> left -> right */
     void dfs_preOrder(Node node) {
         if (node == null) return;
         System.out.print(node.data + "->");
@@ -178,15 +179,15 @@ public class BinaryTreeOp {
 
     void dfs_inOrder(Node node) {
         if (node == null) return;
-        dfs_preOrder(node.left);
+        dfs_inOrder(node.left);
         System.out.print(node.data + "->");
-        dfs_preOrder(node.right);
+        dfs_inOrder(node.right);
     }
 
     void dfs_postOrder(Node node) {
         if (node == null) return;
-        dfs_preOrder(node.left);
-        dfs_preOrder(node.right);
+        dfs_postOrder(node.left);
+        dfs_postOrder(node.right);
         System.out.print(node.data + "->");
     }
 
